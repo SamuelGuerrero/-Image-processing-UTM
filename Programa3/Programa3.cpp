@@ -1,8 +1,12 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include <string.h>
+
+using namespace std;
 using namespace cv;
 
 // Programa que junta los 3 canales en una imagen a color
+tuple<string, string> getImageName(string pathName);
 
 int main(int argc, char **argv)
 {
@@ -16,11 +20,6 @@ int main(int argc, char **argv)
     cv::Mat B = cv::imread(argv[1]);
     cv::Mat G = cv::imread(argv[2]);
     cv::Mat R = cv::imread(argv[3]);
-//    if (!((B.rows == G.rows == R.rows) && (B.cols == G.cols == R.cols)))
-//    {
-//        printf("Pasar 3 imágenes en 3 canales B G R con los mismos tamaños \n");
-//        return -1;
-//    }
 
     cv::Mat OriginalImage(B.rows, B.cols, CV_8UC3);
 
@@ -40,7 +39,30 @@ int main(int argc, char **argv)
         }
     }
 
-    cv::imwrite("InnerspeakerRestaurated.png", OriginalImage);
+    string pathName = argv[1];
+    auto [newPathName, format] = getImageName(pathName);
+
+    string RGBImage = newPathName + "BGR" + format;
+
+    cv::imwrite(RGBImage, OriginalImage);
 
     return 0;
+}
+
+tuple<string, string> getImageName(string pathName)
+{
+    string imageName = "", imageFormat = "";
+    int i;
+    for (i = 0; pathName[i] != '.'; i++)
+    {
+        imageName += pathName[i];
+    }
+    imageName.pop_back();
+
+    for (; pathName[i] != '\0'; i++)
+    {
+        imageFormat += pathName[i];
+    }
+
+    return {imageName, imageFormat};
 }

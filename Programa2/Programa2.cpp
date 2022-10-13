@@ -1,8 +1,12 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include <tuple>
+
+using namespace std;
 using namespace cv;
 
 // Programa que extra 3 imágenes en RGB separados
+tuple<string, string> getImageName(string pathName);
 
 int main(int argc, char **argv)
 {
@@ -36,9 +40,35 @@ int main(int argc, char **argv)
         }
     }
 
-    cv::imwrite("InnerspeakerRed.png", R);
-    cv::imwrite("InnerspeakerGreen.png", G);
-    cv::imwrite("InnerspeakerBlue.png", B);
+    string pathName = argv[1];
+    auto [newPathName, format] = getImageName(pathName);
+
+    cout << newPathName;
+
+    string imageB = newPathName + "B" + format;
+    string imageG = newPathName + "G" + format;
+    string imageR = newPathName + "R" + format;
+
+    cv::imwrite(imageR, R);
+    cv::imwrite(imageG, G);
+    cv::imwrite(imageB, B);
 
     return 0;
+}
+
+tuple<string, string> getImageName(string pathName)
+{
+    string imageName = "", imageFormat = "";
+    int i;
+    for (i = 0; pathName[i] != '.'; i++)
+    {
+        imageName += pathName[i];
+    }
+
+    for (; pathName[i] != '\0'; i++)
+    {
+        imageFormat += pathName[i];
+    }
+
+    return {imageName, imageFormat};
 }
