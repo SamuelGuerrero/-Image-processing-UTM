@@ -6,7 +6,7 @@ using namespace std;
 using namespace cv;
 
 // Programa que junta los 3 canales en una imagen a color
-tuple<string, string> getImageName(string pathName);
+tuple<string, string> getImageProperties(string pathName);
 
 int main(int argc, char **argv)
 {
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     }
 
     string pathName = argv[1];
-    auto [newPathName, format] = getImageName(pathName);
+    auto [newPathName, format] = getImageProperties(pathName);
 
     string RGBImage = newPathName + "BGR" + format;
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-tuple<string, string> getImageName(string pathName)
+tuple<string, string> getImageProperties(string pathName)
 {
     string imageName = "", imageFormat = "";
     int i;

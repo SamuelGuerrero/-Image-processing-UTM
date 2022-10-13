@@ -6,7 +6,7 @@ using namespace std;
 using namespace cv;
 
 // Programa que extra 3 imágenes en RGB separados
-tuple<string, string> getImageName(string pathName);
+tuple<string, string> getImageProperties(string pathName);
 
 int main(int argc, char **argv)
 {
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     }
 
     string pathName = argv[1];
-    auto [newPathName, format] = getImageName(pathName);
+    auto [newPathName, format] = getImageProperties(pathName);
 
     cout << newPathName;
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-tuple<string, string> getImageName(string pathName)
+tuple<string, string> getImageProperties(string pathName)
 {
     string imageName = "", imageFormat = "";
     int i;
