@@ -6,9 +6,10 @@
 using namespace std;
 using namespace cv;
 
-uchar Suma(uchar A, uchar B, uchar maxValue);
-tuple<uchar, uchar, uchar> getMaxValues(Mat image1, Mat image2);
+uchar Suma(uchar A, uchar B, int maxValue);
+tuple<int, int, int> getMaxValues(Mat image1, Mat image2);
 tuple<string, string> getImageProperties(string pathName);
+int SumaNormal(int A, int B);
 
 int main(int argc, char **argv)
 {
@@ -32,6 +33,8 @@ int main(int argc, char **argv)
     int nf = image1.rows, nc = image1.cols, canales = image1.channels();
 
     auto [maxB, maxG, maxR] = getMaxValues(image1, image2);
+
+    printf("%d %d %d \n", maxB, maxG, maxR);
 
     for (j = 0; j < nf; j++)
     {
@@ -58,49 +61,54 @@ int main(int argc, char **argv)
     return 0;
 }
 
-uchar Suma(uchar A, uchar B, uchar maxValue)
+uchar Suma(uchar A, uchar B, int maxValue)
 {
     int res;
     res = A + B;
-
-    if (res >= 255)
-    {
-        // printf("%d\n", res);
-        // res = (res * 255) / maxValue;
-        return 255;
-    }
+    /*
+        if (res > 255)
+        {
+            res = res * 255;
+            res = res / maxValue;
+            //return 255;
+        }*/
+    res = res * 255;
+    res = res / maxValue;
     return res;
 }
 
-tuple<uchar, uchar, uchar> getMaxValues(Mat image1, Mat image2)
+int SumaNormal(int A, int B)
+{
+    int res;
+    res = A + B;
+    return res;
+}
+
+tuple<int, int, int> getMaxValues(Mat image1, Mat image2)
 {
     int nf = image1.rows, nc = image1.cols, canales = image1.channels();
 
-    uchar maxB = 0;
-    uchar maxG = 0;
-    uchar maxR = 0;
+    int maxB = 0, maxG = 0, maxR = 0;
+    int res1, res2, res3;
 
     for (int j = 0; j < nf; j++)
     {
         uchar *A = image1.ptr<uchar>(j);
-        uchar *B = image1.ptr<uchar>(j);
+        uchar *B = image2.ptr<uchar>(j);
 
         for (int i = 0; i < nc * canales; i += canales)
         {
-            if (*(A + i) >= maxB)
-                maxB = *(A + i);
-            if (*(B + i) >= maxB)
-                maxB = *(B + i);
+            res1 = SumaNormal(*(A + i), *(B + i));
+            if (res1 > maxB)
+                maxB = res1;
 
-            if (*(A + i + 1) >= maxG)
-                maxG = *(A + i + 1);
-            if (*(B + i + 1) >= maxG)
-                maxG = *(B + i + 1);
+            res2 = SumaNormal(*(A + i + 1), *(B + i + 1));
+            if (res2 > maxG)
+                maxG = res2;
 
-            if (*(A + i + 2) >= maxR)
-                maxR = *(A + i + 2);
-            if (*(B + i + 2) >= maxR)
-                maxR = *(B + i + 2);
+            res3 = SumaNormal(*(A + i + 2), *(B + i + 2));
+            if (res3 > maxR)
+                maxR = res3;
         }
     }
     return {maxB, maxG, maxR};

@@ -6,7 +6,7 @@
 using namespace std;
 using namespace cv;
 
-uchar RestaNormalizada(uchar A, uchar B, int a, int b);
+int RestaNormalizada(uchar A, uchar B, int a, int b);
 tuple<int, int, int, int, int, int> getMinMaxValues(Mat image1, Mat image2);
 
 int main(int argc, char **argv)
@@ -52,14 +52,13 @@ int main(int argc, char **argv)
     return 0;
 }
 
-uchar RestaNormalizada(uchar A, uchar B, int a, int b)
+int RestaNormalizada(uchar A, uchar B, int a, int b)
 {
-    float res;
+    int res;
     res = A - B;
-    if (res < 0)
-    {
-        res = ((res)-a) * 255 / (b - a);
-    }
+    res = ((res)-a);
+    res = res * 255;
+    res = res / (b - a);
     return res;
 }
 
@@ -67,21 +66,16 @@ tuple<int, int, int, int, int, int> getMinMaxValues(Mat image1, Mat image2)
 {
     int nf = image1.rows, nc = image1.cols, canales = image1.channels();
 
-    int maxB = 0;
-    int minB = 0;
-
-    int maxG = 0;
-    int minG = 0;
-
-    int maxR = 0;
-    int minR = 0;
+    int maxB = 0, minB = 0;
+    int maxG = 0, minG = 0;
+    int maxR = 0, minR = 0;
 
     int res;
 
     for (int j = 0; j < nf; j++)
     {
         uchar *A = image1.ptr<uchar>(j);
-        uchar *B = image1.ptr<uchar>(j);
+        uchar *B = image2.ptr<uchar>(j);
 
         for (int i = 0; i < nc * canales; i += canales)
         {
