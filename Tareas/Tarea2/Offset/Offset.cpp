@@ -21,12 +21,21 @@ int main(int argc, char **argv)
     int offsetX = stoi(argv[2]), offsetY = stoi(argv[3]);
     int jTemp;
 
+    if (abs(offsetX) > nc)
+    {
+        printf("Pasar un offsetX entre %d %d\n", -nc, nc);
+        return -1;
+    }
+    if (abs(offsetY) > nf)
+    {
+        printf("Pasar un offsetY entre %d %d\n", -nf, nf);
+        return -1;
+    }
+
     if (offsetY > 0)
         jTemp = nf - offsetY;
     else
         jTemp = -1 * offsetY;
-
-    printf("%d\n", jTemp);
 
     for (j = 0; j < nf; j++)
     {

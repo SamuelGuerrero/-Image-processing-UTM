@@ -20,6 +20,17 @@ int main(int argc, char **argv)
 
     int offsetX = stoi(argv[2]), offsetY = stoi(argv[3]);
 
+    if (abs(offsetX) > nc)
+    {
+        printf("Pasar un offsetX entre %d %d\n", -nc, nc);
+        return -1;
+    }
+    if (abs(offsetY) > nf)
+    {
+        printf("Pasar un offsetY entre %d %d\n", -nf, nf);
+        return -1;
+    }
+
     for (j = 0; j < nf; j++)
     {
         int moveOrigin = j + offsetY, moveDestiny = j;
@@ -28,7 +39,7 @@ int main(int argc, char **argv)
         {
             moveOrigin = j;
             moveDestiny = j - offsetY;
-            if((j-offsetY) >= nf)
+            if ((j - offsetY) >= nf)
                 break;
         }
 
