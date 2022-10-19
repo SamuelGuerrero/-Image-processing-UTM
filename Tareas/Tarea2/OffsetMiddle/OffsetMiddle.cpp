@@ -7,9 +7,9 @@ using namespace cv;
 int main(int argc, char **argv)
 {
     int i, j;
-    if (argc != 4)
+    if (argc != 5)
     {
-        printf("Pasar 1 imagen y 2 offsets como parámetros\n");
+        printf("Pasar 1 imagen y 2 offsets y el nombre destino como parámetros\n");
         return -1;
     }
 
@@ -68,7 +68,10 @@ int main(int argc, char **argv)
         }
     }
 
-    cv::imwrite("Offset.png", result);
+    string name = argv[4];
+    string pathName = name + ".png";
+
+    cv::imwrite(pathName, result);
 
     return 0;
 }
