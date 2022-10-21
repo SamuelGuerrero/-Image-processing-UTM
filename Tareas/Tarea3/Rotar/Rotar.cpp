@@ -25,15 +25,20 @@ int main(int argc, char **argv)
         Mat result(image.cols, image.rows, CV_8UC3, Scalar(0, 0, 0));
         Rotar90(image, result);
     }
-    if (rotation == 180)
+    else if (rotation == 180)
     {
         Mat result(image.rows, image.cols, CV_8UC3, Scalar(0, 0, 0));
         Rotar180(image, result);
     }
-    if (rotation == 270)
+    else if (rotation == 270)
     {
         Mat result(image.cols, image.rows, CV_8UC3, Scalar(0, 0, 0));
         Rotar270(image, result);
+    }
+    else
+    {
+        printf("Escoger una opción válida: 90, 180, 270\n");
+        return -1;
     }
 
     return 0;
