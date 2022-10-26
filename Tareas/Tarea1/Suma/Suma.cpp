@@ -65,13 +65,6 @@ uchar Suma(uchar A, uchar B, int maxValue)
 {
     int res;
     res = A + B;
-    /*
-        if (res > 255)
-        {
-            res = res * 255;
-            res = res / maxValue;
-            //return 255;
-        }*/
     res = res * 255;
     res = res / maxValue;
     return res;
