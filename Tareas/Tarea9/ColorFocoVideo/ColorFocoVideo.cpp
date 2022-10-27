@@ -5,6 +5,7 @@ using namespace cv;
 
 static void mouseHandler(int event, int x, int y, int flags, void *param);
 void FocoMove(Mat image, Mat result, Mat foco);
+Mat makeGray( Mat colorImage);
 
 int X, Y;
 
@@ -57,7 +58,8 @@ int main(int argc, char **argv)
             printf("Error al obtener imagen\n");
             break;
         }
-        Mat result(A.rows, A.cols, CV_8UC3, Scalar(0, 0, 0));
+
+        Mat result = makeGray(A);
         FocoMove(A, result, C);
 
         imshow("FocoCamera", result);
@@ -65,6 +67,30 @@ int main(int argc, char **argv)
             break;
     }
     return 0;
+}
+
+Mat makeGray( Mat colorImage)
+{
+    Mat res(colorImage.rows, colorImage.cols, CV_8UC3);
+
+    int i, j;
+    int nf = colorImage.rows, nc = colorImage.cols, canales = colorImage.channels();
+
+    for (j = 0; j < nf; j++)
+    {
+        uchar *rA = colorImage.ptr<uchar>(j);
+        uchar *rR = res.ptr<uchar>(j);
+        for (i = 0; i < nc * canales; i += canales)
+        {
+            uchar pR = *(rA + i);
+            uchar pG = *(rA + i + 1);
+            uchar pB = *(rA + i + 2);
+            uchar pP = (pR + pG + pB) / 3;
+            *(rR + i) = *(rR + i + 1) = *(rR + i + 2) = pP;
+        }
+    }
+
+    return res;
 }
 
 void FocoMove(Mat image, Mat result, Mat foco)
@@ -83,7 +109,6 @@ void FocoMove(Mat image, Mat result, Mat foco)
 
     if (((Y + (Fnf / 2)) > nf))
         Yaux = nf - Fnf;
-
     if (((Y - (Fnf / 2)) < 0))
         Yaux = 0;
 
