@@ -5,10 +5,12 @@
 using namespace std;
 using namespace cv;
 
+void funcionUmbral(int umbral, void *userData);
+Mat Escalar(Mat image, int umbral);
+Mat image;
+
 int main(int argc, char **argv)
 {
-    int i, j;
-
     if (argc != 2)
     {
         printf("Pasar 1 imagen\n");
@@ -17,11 +19,29 @@ int main(int argc, char **argv)
 
     Mat image = imread(argv[1]);
 
-    Mat result(image.rows / 2, image.cols / 2, CV_8UC3, Scalar(0, 0, 0));
+    int umbral = 0;
+    imshow("FocoCamera", image);
 
-    int nf = result.rows, nc = result.cols, canales = result.channels();
+    createTrackbar("Escala", "FocoCamera", &umbral, 3, funcionUmbral, &umbral);
 
+    while (true)
+    {
+        Mat result = Escalar(image, umbral);
+        imshow("FocoCamera", result);
+        if (waitKey(27) >= 0)
+            break;
+    }
+
+    return 0;
+}
+
+Mat Escalar(Mat image, int umbral)
+{
     int yAux = 0;
+    int i, j;
+
+    Mat result(image.rows / (umbral + 1), image.cols / (umbral + 1), CV_8UC3, Scalar(0, 0, 0));
+    int nf = result.rows, nc = result.cols, canales = result.channels();
 
     for (j = 0; j < nf; j++)
     {
@@ -36,8 +56,11 @@ int main(int argc, char **argv)
         }
         yAux += 2;
     }
+    image = result.clone();
+    return result;
+}
 
-    imwrite("Redim.png", result);
-
-    return 0;
+void funcionUmbral(int umbral, void *userData)
+{
+    printf("%d\n", umbral);
 }
