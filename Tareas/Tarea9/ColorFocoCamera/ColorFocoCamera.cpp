@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     {
         FocoMove(colorImage, grayImage, C);
         imshow("FocoCamera", grayImage);
-        if (waitKey(27) >= 0)
+        if (waitKey(10) == 27)
             break;
     }
 

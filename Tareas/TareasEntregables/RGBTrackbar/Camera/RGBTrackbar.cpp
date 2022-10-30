@@ -6,27 +6,37 @@ using namespace std;
 using namespace cv;
 
 void funcionUmbral(int umbral, void *userData);
-Mat MakeGray(string pathName);
 
-Mat BlueChannel(string pathName);
-Mat GreenChannel(string pathName);
-Mat RedChannel(string pathName);
+Mat Gray(Mat A);
 
-    string pathName;
+Mat BlueChannel(Mat A);
+Mat GreenChannel(Mat A);
+Mat RedChannel(Mat A);
 
+Mat A;
 int main(int argc, char **argv)
 {
-    if (argc != 2)
+    VideoCapture cap;
+    int deviceID = 0;
+    int apiID = CAP_ANY;
+    cap.open(deviceID, apiID);
+
+    if (!cap.isOpened())
+    {
+        printf("Error al leer la cámara\n");
+        return -1;
+    }
+
+    if (argc != 1)
     {
         printf("Pasar 1 imagen\n");
         return -1;
     }
+    namedWindow("RGBTrackbar", WINDOW_AUTOSIZE);
 
-    Mat image = imread(argv[1]);
-    pathName = argv[1];
 
     int umbral = 0;
-    imshow("RGBTrackbar", image);
+    cap.read(A);
 
     createTrackbar("Escala", "RGBTrackbar", &umbral, 4, funcionUmbral, &umbral);
 
@@ -34,17 +44,24 @@ int main(int argc, char **argv)
 
     while (true)
     {
+        cap.read(A);
+
+        if (A.empty())
+        {
+            printf("Error al obtener imagen\n");
+            break;
+        }
 
         if (umbral == 0)
-            result = image;
+            result = A;
         if (umbral == 1)
-            result = MakeGray(pathName);
+            result = Gray(A);
         if (umbral == 2)
-            result = BlueChannel(pathName);
+            result = BlueChannel(A);
         if (umbral == 3)
-            result = GreenChannel(pathName);
+            result = GreenChannel(A);
         if (umbral == 4)
-            result = RedChannel(pathName);
+            result = RedChannel(A);
         imshow("RGBTrackbar", result);
 
         if (waitKey(27) >= 0)
@@ -54,9 +71,8 @@ int main(int argc, char **argv)
     return 0;
 }
 
-Mat BlueChannel(string pathName)
+Mat BlueChannel(Mat A)
 {
-    Mat A = imread(pathName);
     Mat B(A.rows, A.cols, CV_8UC3, Scalar(0, 0, 0));
 
     int nf = A.rows, nc = A.cols, canales = A.channels();
@@ -65,16 +81,15 @@ Mat BlueChannel(string pathName)
     {
         uchar *rA = A.ptr<uchar>(j);
         uchar *BImage = B.ptr<uchar>(j);
-        for (i = 0; i < nc * canales; i += canales)    
+        for (i = 0; i < nc * canales; i += canales)
             *(BImage + i) = *(rA + i);
     }
 
     return B;
 }
 
-Mat GreenChannel(string pathName)
+Mat GreenChannel(Mat A)
 {
-    Mat A = imread(pathName);
     Mat G(A.rows, A.cols, CV_8UC3, Scalar(0, 0, 0));
 
     int nf = A.rows, nc = A.cols, canales = A.channels();
@@ -90,9 +105,8 @@ Mat GreenChannel(string pathName)
     return G;
 }
 
-Mat RedChannel(string pathName)
+Mat RedChannel(Mat A)
 {
-    Mat A = imread(pathName);
     Mat R(A.rows, A.cols, CV_8UC3, Scalar(0, 0, 0));
 
     int nf = A.rows, nc = A.cols, canales = A.channels();
@@ -113,9 +127,8 @@ void funcionUmbral(int umbral, void *userData)
     printf("%d\n", umbral);
 }
 
-Mat MakeGray(string pathName)
+Mat Gray(Mat colorImage)
 {
-    Mat colorImage = imread(pathName);
     Mat res(colorImage.rows, colorImage.cols, CV_8UC3);
 
     int i, j;
