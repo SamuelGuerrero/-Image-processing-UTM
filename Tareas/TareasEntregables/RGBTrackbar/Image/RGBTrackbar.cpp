@@ -12,7 +12,7 @@ Mat BlueChannel(string pathName);
 Mat GreenChannel(string pathName);
 Mat RedChannel(string pathName);
 
-    string pathName;
+string pathName;
 
 int main(int argc, char **argv)
 {
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
             result = RedChannel(pathName);
         imshow("RGBTrackbar", result);
 
-        if (waitKey(27) >= 0)
+        if (waitKey(10) == 27)
             break;
     }
 
@@ -65,7 +65,7 @@ Mat BlueChannel(string pathName)
     {
         uchar *rA = A.ptr<uchar>(j);
         uchar *BImage = B.ptr<uchar>(j);
-        for (i = 0; i < nc * canales; i += canales)    
+        for (i = 0; i < nc * canales; i += canales)
             *(BImage + i) = *(rA + i);
     }
 

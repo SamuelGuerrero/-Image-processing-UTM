@@ -64,7 +64,7 @@ int main(int argc, char **argv)
             result = RedChannel(A);
         imshow("RGBTrackbar", result);
 
-        if (waitKey(27) >= 0)
+        if (waitKey(10) == 27)
             break;
     }
 

@@ -5,6 +5,7 @@ using namespace cv;
 
 static void mouseHandler(int event, int x, int y, int flags, void *param);
 void FocoMove(Mat image, Mat result, Mat foco);
+void funcionUmbral(int umbral, void *userData);
 Mat makeGray(string pathName);
 
 int X, Y;
@@ -18,7 +19,6 @@ Mat Respaldo;
 Mat grayImage, grayImageAux;
 string pathName;
 
-void funcionUmbral(int umbral, void *userData);
 
 int main(int argc, char **argv)
 {
@@ -57,8 +57,6 @@ int main(int argc, char **argv)
         if (waitKey(10) == 27)
             break;
     }
-
-    imwrite("Resultado.png", Respaldo);
 
     return 0;
 }
