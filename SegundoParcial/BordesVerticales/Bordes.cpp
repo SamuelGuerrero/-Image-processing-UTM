@@ -18,6 +18,8 @@ int main(int argc, char **argv)
 
     int nf = image.rows, nc = image.cols, canales = image.channels();
     int i, j;
+    int intensity = 1.2;
+    int b, g, r;
 
     for (i = 0; i < nc * canales; i += canales)
     {
@@ -26,9 +28,13 @@ int main(int argc, char **argv)
             uchar *A = image.ptr<uchar>(j);
             uchar *res = borde.ptr<uchar>(j);
 
-            *(res + i) = abs((*(A + i)) - (*(A + (i + canales))));
-            *(res + i + 1) = abs((*(A + i + 1)) - (*(A + (i + canales) + 1)));
-            *(res + i + 2) = abs((*(A + i + 2)) - (*(A + (i + canales) + 2)));
+            b = abs((*(A + i)) - (*(A + (i + canales))));
+            g = abs((*(A + i + 1)) - (*(A + (i + canales) + 1)));
+            r = abs((*(A + i + 2)) - (*(A + (i + canales) + 2)));
+
+            *(res + i) = (b > 100) ? b * intensity : b;
+            *(res + i + 1) = (g > 100) ? g * intensity : g;
+            *(res + i + 2) = (r > 100) ? r * intensity : r;
         }
     }
 
