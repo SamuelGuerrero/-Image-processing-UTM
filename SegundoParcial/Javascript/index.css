@@ -1,0 +1,46 @@
+body {
+    background-color: #FA8072;
+}
+
+.result {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    align-items: center;
+}
+
+.card {
+    width: min-content;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    border-radius: 1rem;
+    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: antiquewhite;
+    margin-bottom: 30px;
+    filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
+}
+
+.entrada{
+    display: none;
+}
+
+label{
+    border-radius: 0.5rem;
+    width: 200px;
+    height: 20px;
+    background-color: antiquewhite;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    color: black;
+}
+
+.logo{
+    width: 64px;
+    height: 64px;
+}

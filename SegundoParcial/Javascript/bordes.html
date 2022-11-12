@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>PDI</title>
+    <link rel="stylesheet" href="index.css" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!--Import materialize.css-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="css/materialize.min.css"
+      media="screen,projection"
+    />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo">
+            <img class="logo" src="/images/LogoUTM.png"/>
+        </a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="bordes.html">Bordes</a></li>
+          <li><a href="#">Próximamente...</a></li>
+          <li><a href="#">Próximamente...</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    
+    <div class="result">
+        <div class="card">
+            <h4>Imágen Original</h4>
+            <label>
+                Seleccionar Imágen
+                <input
+                  class="entrada"
+                  type="file"
+                  id="imagen1"
+                  accept=".jpg, .jpeg, .png"
+                />
+              </label>
+            <canvas id="canvasImagen1"></canvas>
+          </div>
+      
+        <div class="card">
+        <h4>Bordes Verticales</h4>
+        <canvas  id="canvasImagen2"></canvas>
+      </div>
+      <div class="card">
+        <h4>Bordes horizontales</h4>
+        <canvas id="canvasImagen3"></canvas>
+      </div>
+      <div class="card">
+        <h4>Bordes Combinados</h4>
+        <canvas id="canvasImagen4"></canvas>
+      </div>
+    </div>
+
+    <script>
+      var fileTypes = ["image/jpg", "image/jpeg", "image/png"];
+      var canvas1 = document.getElementById("canvasImagen1");
+      var canvas2 = document.getElementById("canvasImagen2");
+      var canvas3 = document.getElementById("canvasImagen3");
+      var canvas4 = document.getElementById("canvasImagen4");
+
+      var image1 = new Image();
+      var imagen1 = document.getElementById("imagen1");
+
+      imagen1.addEventListener("change", actualizarImagen1);
+
+      var ctx1 = canvas1.getContext("2d");
+      var ctx2 = canvas2.getContext("2d");
+      var ctx3 = canvas3.getContext("2d");
+      var ctx4 = canvas4.getContext("2d");
+
+      function actualizarImagen1() {
+        var curFile = imagen1.files;
+        source = curFile[0].name;
+        image1.src = window.URL.createObjectURL(curFile[0]);
+        image1.onload = function () {
+          canvas1.width = image1.width;
+          canvas1.height = image1.height;
+          ctx1.drawImage(image1, 0, 0);
+          var image2 = new Image();
+          bordes();
+        };
+      }
+
+      function bordes() {
+        bordesVerticales();
+        bordesHorizontales();
+        bordesCombinados();
+      }
+
+      function bordesVerticales() {
+        image2 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+        pixels = image2.data;
+        numPixels = image2.width * image2.height;
+        for (var i = 0; i < numPixels; i++) {
+          var r = Math.abs(pixels[i * 4] - pixels[i * 4 + 4]);
+          var g = Math.abs(pixels[i * 4 + 1] - pixels[i * 4 + 4 + 1]);
+          var b = Math.abs(pixels[i * 4 + 2]  -pixels[i * 4 + 4 + 2]);
+
+          pixels[i * 4] = r;
+          pixels[i * 4 + 1] = g;
+          pixels[i * 4 + 2] = b;
+        }
+        canvas2.width = image2.width;
+        canvas2.height = image2.height;
+        ctx2.putImageData(image2, 0, 4);
+      }
+
+      function bordesHorizontales() {
+        image2 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+        pixels = image2.data;
+        numPixels = image2.width * image2.height;
+        for (var i = 0; i < numPixels; i++) {
+          var r = Math.abs(pixels[i * 4] - pixels[i * 4 + image2.width * 4]);
+          var g = Math.abs(
+            pixels[i * 4 + 1] - pixels[i * 4 + image2.width * 4 + 1]
+          );
+          var b = Math.abs(
+            pixels[i * 4 + 2]  -pixels[i * 4 + image2.width * 4 + 2]
+          );
+
+          pixels[i * 4] = r;
+          pixels[i * 4 + 1] = g;
+          pixels[i * 4 + 2] = b;
+        }
+        canvas3.width = image2.width;
+        canvas3.height = image2.height;
+        ctx3.putImageData(image2, 0, 4);
+      }
+
+      function bordesCombinados() {
+        image2 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+        pixels = image2.data;
+        numPixels = image2.width * image2.height;
+        for (var i = 0; i < numPixels; i++) {
+          var r1 = Math.abs(pixels[i * 4] - pixels[i * 4 + 4]);
+          var g1 = Math.abs(pixels[i * 4 + 1] - pixels[i * 4 + 4 + 1]);
+          var b1 = Math.abs(pixels[i * 4 + 2] + -pixels[i * 4 + 4 + 2]);
+
+          var r2 = Math.abs(pixels[i * 4] - pixels[i * 4 + image2.width * 4]);
+          var g2 = Math.abs(
+            pixels[i * 4 + 1] - pixels[i * 4 + image2.width * 4 + 1]
+          );
+          var b2 = Math.abs(
+            pixels[i * 4 + 2]  -pixels[i * 4 + image2.width * 4 + 2]
+          );
+
+          pixels[i * 4] = Math.max(r1, r2);
+          pixels[i * 4 + 1] = Math.max(g1, g2);
+          pixels[i * 4 + 2] = Math.max(b1, b2);
+        }
+        canvas4.width = image2.width;
+        canvas4.height = image2.height;
+        ctx4.putImageData(image2, 0, 4);
+      }
+    </script>
+  </body>
+</html>

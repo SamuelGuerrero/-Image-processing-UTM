@@ -1,0 +1,77 @@
+!
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PDI</title>
+    <link rel="stylesheet" href="index.css">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <input class="entrada" type="file" id="imagen1" accept=".jpg, .jpeg, .png" />
+    <canvas id="canvasImagen1"></canvas>
+    <canvas id="canvasImagen2"></canvas>
+
+
+    <script>
+        var fileTypes = ["image/jpg", "image/jpeg", "image/png"];
+        var canvas1 = document.getElementById("canvasImagen1");
+        var canvas2 = document.getElementById("canvasImagen2");
+        var image1 = new Image();
+        var imagen1 = document.getElementById("imagen1");
+
+        imagen1.addEventListener("change", actualizarImagen1);
+
+        var ctx1 = canvas1.getContext("2d");
+        var ctx2 = canvas2.getContext("2d");
+
+
+        function actualizarImagen1() {
+            var curFile = imagen1.files;
+            source = curFile[0].name;
+            image1.src = window.URL.createObjectURL(curFile[0]);
+            image1.onload = function () {
+                canvas1.width = image1.width;
+                canvas1.height = image1.height;
+                ctx1.drawImage(image1, 0, 0)
+                var image2 = new Image()
+                gris()
+            }
+        }
+
+        function gris() {
+            grisFunction();
+        }
+
+        function grisFunction() {
+            image2 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+            pixels = image2.data;
+            numPixels = image2.width * image2.height;
+            for (var i = 0; i < numPixels; i++) {
+                var r = pixels[i * 4];
+                var g = pixels[i * 4 + 1];
+                var b = pixels[i * 4 + 2];
+
+                var gris = (r + g + b) / 3;
+
+                pixels[i * 4] = gris;
+                pixels[i * 4 + 1] = gris;
+                pixels[i * 4 + 2] = gris;
+            }
+            canvas2.width = image2.width;
+            canvas2.height = image2.height;
+            ctx2.putImageData(image2, 0, 4);
+        }
+    </script>
+</body>
+
+</html>
